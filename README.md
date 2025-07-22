@@ -3,21 +3,18 @@
 A free course schedule planner made for students at the University of Oklahoma.
 
 ## Tech Stack
-- **Next.js**
-- **Tailwind CSS**
-- **TypeScript**
-- **shadcn/ui**
-- **React**
-- **Vercel**
-- **Python + BeautifulSoup** (scraper)
-- **Google Analytics**
+- **Framework:** Next.js
+- **Language:** Typscript
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn/ui
+- **UI Library:** React
+- **Deployment** Vercel
+- **CI/CD** GitHub Actions
 
 ## Structure
-- `/src/pages` – Pages + API routes
+- `/src/pages` – Pages and API routes
 - `/src/components` – UI components
 - `/src/lib` – Schedule generation logic
-- `/src/data` – Static scraped course data
-- `/scraper` – Python scraper
 
 ## 📌 Notes
 - No database or authentication in MVP
