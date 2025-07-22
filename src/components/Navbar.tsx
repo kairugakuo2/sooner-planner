@@ -9,11 +9,11 @@ const Navbar = () => {
                 <div className="text-2xl font-bold text-red-600">
                     Sooner Planner
                 </div>
-                <div className="cursor-pointer hover:text-dark-crimson">
+                <div className="cursor-pointer ">
                     How It Works
                 </div>
             </div>
-            <div>
+            <div className="cursor-pointer">
                 View on Github
             </div>
         </nav>
