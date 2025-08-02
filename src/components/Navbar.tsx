@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import React from 'react';
+import Link from 'next/link'
+import {Button} from "@/components/ui/button"
 
 
 const Navbar = () => {
@@ -17,14 +18,17 @@ const Navbar = () => {
                     </span>
                 </Link>
             </div>
-            <a 
+            <Button asChild>
+                <a 
                 href="https://github.com/kairugakuo2/sooner-planner" 
                 target="_blank" //opens link in new tab
                 rel="noopener noreferrer" //security from new tab 
                 className="cursor-pointer"
-            >
-                View on Github
-            </a>
+                >
+                    View on Github
+                </a>
+            </Button>
+           
         </nav>
     )
 }
