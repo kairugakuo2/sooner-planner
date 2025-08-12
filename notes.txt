@@ -1,0 +1,4 @@
+notes:
+
+todo:
+- handle lecture + lab pairings later

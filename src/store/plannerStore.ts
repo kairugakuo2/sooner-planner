@@ -1,9 +1,10 @@
 import { create } from 'zustand';
+import { Schedule, generateSchedules, getScheduleStats } from '@/lib/scheduler';
 
 export type Term = { year: number; semester: 'Spring' | 'Summer' | 'Fall' };
 
 export type CourseTime = {
-  day: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri';
+  days: string[];  // Array of days like ['Mon', 'Wed', 'Fri']
   start: string;
   end: string;
 };
@@ -38,6 +39,12 @@ export interface PlannerState {
   passingMins?: 0 | 10 | 15;
   style?: Style;
   
+  // Schedule generation state
+  schedules: Schedule[];
+  selectedSchedule: Schedule | null;
+  isGenerating: boolean;
+  generationError: string | null;
+  
   // UI state
   openStep: string | null;
   
@@ -51,9 +58,15 @@ export interface PlannerState {
   setStyle: (style: Style) => void;
   setOpenStep: (stepId: string | null) => void;
   
+  // Schedule actions
+  generateSchedules: () => Promise<void>;
+  selectSchedule: (schedule: Schedule | null) => void;
+  clearSchedules: () => void;
+  
   // Derived state
   getRequiredValid: () => { courses: boolean; style: boolean };
   getAllRequiredValid: () => boolean;
+  getScheduleStats: () => ReturnType<typeof getScheduleStats>;
 }
 
 export const usePlannerStore = create<PlannerState>((set, get) => ({
@@ -67,6 +80,10 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   avoidNights: false,
   passingMins: 15,
   style: undefined,
+  schedules: [],
+  selectedSchedule: null,
+  isGenerating: false,
+  generationError: null,
   openStep: 'courses',
   
   // Actions
@@ -97,6 +114,50 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   
   setOpenStep: (stepId) => set({ openStep: stepId }),
   
+  // Schedule actions
+  generateSchedules: async () => {
+    const state = get();
+    if (!state.style || state.courses.length === 0) {
+      set({ generationError: 'Missing required information' });
+      return;
+    }
+    
+    set({ isGenerating: true, generationError: null });
+    
+    try {
+      const schedules = generateSchedules(
+        state.courses,
+        state.style,
+        state.earliest || '08:30',
+        state.latest || '18:30',
+        state.noFriday || false,
+        state.avoidNights || false,
+        state.passingMins || 15,
+        state.breaks,
+        { maxVariations: 15, minScore: 30 }
+      );
+      
+      set({ 
+        schedules,
+        selectedSchedule: schedules.length > 0 ? schedules[0] : null,
+        isGenerating: false 
+      });
+    } catch (error) {
+      set({ 
+        generationError: error instanceof Error ? error.message : 'Failed to generate schedules',
+        isGenerating: false 
+      });
+    }
+  },
+  
+  selectSchedule: (schedule) => set({ selectedSchedule: schedule }),
+  
+  clearSchedules: () => set({ 
+    schedules: [], 
+    selectedSchedule: null, 
+    generationError: null 
+  }),
+  
   // Derived state
   getRequiredValid: () => {
     const state = get();
@@ -109,5 +170,10 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   getAllRequiredValid: () => {
     const { courses, style } = get();
     return courses.length > 0 && style !== undefined;
+  },
+  
+  getScheduleStats: () => {
+    const { schedules } = get();
+    return getScheduleStats(schedules);
   }
 }));

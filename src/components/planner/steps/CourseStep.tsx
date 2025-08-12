@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,14 +48,27 @@ export const CourseStep: React.FC = () => {
     removeCourse(courseId);
   };
 
-  const filteredCourses = availableCourses.filter(course => {
-    const searchLower = searchValue.toLowerCase();
-    return (
-      course.subject.toLowerCase().includes(searchLower) ||
-      course.number.includes(searchValue) ||
-      course.title.toLowerCase().includes(searchLower)
-    );
-  });
+  // Improved filtering logic with better search handling
+  const filteredCourses = useMemo(() => {
+    if (!searchValue.trim()) {
+      return availableCourses.slice(0, 10); // Show first 10 courses when no search
+    }
+    
+    const searchLower = searchValue.toLowerCase().trim();
+    return availableCourses.filter(course => {
+      const subjectMatch = course.subject.toLowerCase().includes(searchLower);
+      const numberMatch = course.number.toLowerCase().includes(searchLower);
+      const titleMatch = course.title.toLowerCase().includes(searchLower);
+      
+      // Also check for combined subject + number matches (e.g., "CS 2413")
+      const combinedMatch = `${course.subject} ${course.number}`.toLowerCase().includes(searchLower);
+      
+      return subjectMatch || numberMatch || titleMatch || combinedMatch;
+    });
+  }, [searchValue, availableCourses]);
+
+  // Show search results when there's a search value or when focused
+  const shouldShowResults = isOpen && (searchValue.trim() || filteredCourses.length > 0);
 
   const formatSchedule = (times: any[]) => {
     return times.map(time => 
@@ -107,39 +120,51 @@ export const CourseStep: React.FC = () => {
           <CommandInput
             placeholder="Search by subject + number (e.g., CS 2413)"
             value={searchValue}
-            onValueChange={setSearchValue}
+            onValueChange={(value) => {
+              setSearchValue(value);
+              setIsOpen(true);
+            }}
             onFocus={() => setIsOpen(true)}
+            onBlur={() => {
+              // Keep open if there are results, close if no search value
+              if (!searchValue.trim() && filteredCourses.length === 0) {
+                setIsOpen(false);
+              }
+            }}
           />
-          {isOpen && (
+          {shouldShowResults && (
             <CommandList className="max-h-60">
-              <CommandEmpty>No courses found.</CommandEmpty>
-              <CommandGroup>
-                {filteredCourses.map((course) => (
-                  <CommandItem
-                    key={course.id}
-                    onSelect={() => handleAddCourse(course)}
-                    className="cursor-pointer"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-1">
-                        <div className="font-medium">
-                          {course.subject} {course.number}
-                        </div>
-                        <div className="text-sm text-gray-500">{course.title}</div>
-                        <div className="text-xs text-gray-400 mt-1">
-                          {course.credits} credit{course.credits !== 1 ? 's' : ''} • {course.sections.length} section{course.sections.length !== 1 ? 's' : ''}
-                        </div>
-                        {course.sections.length > 0 && (
-                          <div className="text-xs text-gray-400 mt-1">
-                            {formatSchedule(course.sections[0].times)}
+              {filteredCourses.length === 0 ? (
+                <CommandEmpty>No courses found. Try a different search term.</CommandEmpty>
+              ) : (
+                <CommandGroup>
+                  {filteredCourses.map((course) => (
+                    <CommandItem
+                      key={course.id}
+                      onSelect={() => handleAddCourse(course)}
+                      className="cursor-pointer"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="flex-1">
+                          <div className="font-medium">
+                            {course.subject} {course.number}
                           </div>
-                        )}
+                          <div className="text-sm text-gray-500">{course.title}</div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            {course.credits} credit{course.credits !== 1 ? 's' : ''} • {course.sections.length} section{course.sections.length !== 1 ? 's' : ''}
+                          </div>
+                          {course.sections.length > 0 && (
+                            <div className="text-xs text-gray-400 mt-1">
+                              {formatSchedule(course.sections[0].times)}
+                            </div>
+                          )}
+                        </div>
+                        <Plus className="h-4 w-4 text-crimson-600" />
                       </div>
-                      <Plus className="h-4 w-4 text-crimson-600" />
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
             </CommandList>
           )}
         </Command>

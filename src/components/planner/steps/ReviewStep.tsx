@@ -2,19 +2,35 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Calendar, BookOpen, Clock, Users, AlertTriangle, CheckCircle, GraduationCap } from 'lucide-react';
+import { Calendar, BookOpen, Clock, Users, AlertTriangle, CheckCircle, GraduationCap, RefreshCw } from 'lucide-react';
 import { usePlannerStore } from '@/store/plannerStore';
 import { formatTime, getDayAbbreviation } from '@/lib/utils';
+import { ScheduleResults } from '../ScheduleResults';
 
 export const ReviewStep: React.FC = () => {
-  const { term, courses, breaks, style, earliest, latest, getAllRequiredValid, getRequiredValid } = usePlannerStore();
+  const { 
+    term, 
+    courses, 
+    breaks, 
+    style, 
+    earliest, 
+    latest, 
+    getAllRequiredValid, 
+    getRequiredValid,
+    schedules,
+    selectedSchedule,
+    isGenerating,
+    generationError,
+    generateSchedules,
+    selectSchedule
+  } = usePlannerStore();
   
   const requiredValid = getRequiredValid();
   const allRequiredValid = getAllRequiredValid();
 
   const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!allRequiredValid) {
       // Find first invalid step and scroll to it
       if (!requiredValid.courses) {
@@ -27,15 +43,7 @@ export const ReviewStep: React.FC = () => {
       return;
     }
     
-    // TODO: Implement actual schedule generation
-    console.log('Generating schedule with:', {
-      term,
-      courses,
-      breaks,
-      style,
-      earliest,
-      latest
-    });
+    await generateSchedules();
   };
 
   const getStyleDisplayName = (style: string) => {
@@ -215,17 +223,21 @@ export const ReviewStep: React.FC = () => {
       <div className="text-center pt-6 border-t border-gray-200">
         <Button
           onClick={handleGenerate}
-          disabled={!allRequiredValid}
+          disabled={!allRequiredValid || isGenerating}
           size="lg"
           className={`px-8 py-4 text-lg ${
-            allRequiredValid
+            allRequiredValid && !isGenerating
               ? 'bg-crimson-600 hover:bg-crimson-700'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
           <div className="flex items-center space-x-2">
-            <Calendar className="h-5 w-5" />
-            <span>Generate Schedule</span>
+            {isGenerating ? (
+              <RefreshCw className="h-5 w-5 animate-spin" />
+            ) : (
+              <Calendar className="h-5 w-5" />
+            )}
+            <span>{isGenerating ? 'Generating...' : 'Generate Schedule'}</span>
           </div>
         </Button>
         
@@ -234,7 +246,29 @@ export const ReviewStep: React.FC = () => {
             Please complete all required steps before generating your schedule.
           </p>
         )}
+        
+        {generationError && (
+          <Alert className="mt-4 border-red-200 bg-red-50">
+            <AlertTriangle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">
+              {generationError}
+            </AlertDescription>
+          </Alert>
+        )}
       </div>
+
+      {/* Generated Schedules */}
+      {schedules.length > 0 && (
+        <div className="pt-8 border-t border-gray-200">
+          <ScheduleResults
+            schedules={schedules}
+            selectedSchedule={selectedSchedule}
+            onSelectSchedule={selectSchedule}
+            onRegenerate={handleGenerate}
+            isGenerating={isGenerating}
+          />
+        </div>
+      )}
     </div>
   );
 };

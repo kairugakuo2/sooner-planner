@@ -30,6 +30,8 @@ export function formatTime(time: string): string {
 }
 
 export function getDayAbbreviation(day: string): string {
+  if (!day) return '';
+  
   const dayMap: Record<string, string> = {
     'Mon': 'M',
     'Tue': 'T',
