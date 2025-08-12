@@ -1,23 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { X, Plus, BookOpen } from 'lucide-react';
+import { X, Plus, BookOpen, Clock, User, MapPin } from 'lucide-react';
 import { usePlannerStore } from '@/store/plannerStore';
 import { Course, Term } from '@/store/plannerStore';
-
-// Mock course data - replace with real API call
-const mockCourses: Course[] = [
-  { id: '1', subject: 'CS', number: '2413', title: 'Data Structures' },
-  { id: '2', subject: 'CS', number: '2614', title: 'Computer Organization' },
-  { id: '3', subject: 'MATH', number: '2123', title: 'Calculus III' },
-  { id: '4', subject: 'ENGL', number: '1213', title: 'Composition II' },
-  { id: '5', subject: 'PHYS', number: '2514', title: 'Physics for Scientists' },
-  { id: '6', subject: 'CS', number: '3613', title: 'Algorithms' },
-  { id: '7', subject: 'MATH', number: '3113', title: 'Linear Algebra' },
-  { id: '8', subject: 'HIST', number: '1483', title: 'American History' },
-];
+import { loadCourses, formatTime, getDayAbbreviation } from '@/lib/utils';
 
 const terms: Term[] = [
   { year: 2025, semester: 'Fall' },
@@ -29,6 +18,23 @@ export const CourseStep: React.FC = () => {
   const { term, courses, setTerm, addCourse, removeCourse } = usePlannerStore();
   const [searchValue, setSearchValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const coursesData = await loadCourses();
+        setAvailableCourses(coursesData);
+      } catch (error) {
+        console.error('Failed to fetch courses:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const handleAddCourse = (course: Course) => {
     if (!courses.find(c => c.id === course.id)) {
@@ -42,7 +48,7 @@ export const CourseStep: React.FC = () => {
     removeCourse(courseId);
   };
 
-  const filteredCourses = mockCourses.filter(course => {
+  const filteredCourses = availableCourses.filter(course => {
     const searchLower = searchValue.toLowerCase();
     return (
       course.subject.toLowerCase().includes(searchLower) ||
@@ -50,6 +56,23 @@ export const CourseStep: React.FC = () => {
       course.title.toLowerCase().includes(searchLower)
     );
   });
+
+  const formatSchedule = (times: any[]) => {
+    return times.map(time => 
+      `${getDayAbbreviation(time.day)} ${formatTime(time.start)}-${formatTime(time.end)}`
+    ).join(', ');
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-crimson-600 mx-auto"></div>
+          <p className="text-gray-600 mt-2">Loading courses...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -73,7 +96,6 @@ export const CourseStep: React.FC = () => {
             </SelectContent>
           </Select>
         </div>
-
       </div>
 
       {/* Course Search */}
@@ -104,6 +126,14 @@ export const CourseStep: React.FC = () => {
                           {course.subject} {course.number}
                         </div>
                         <div className="text-sm text-gray-500">{course.title}</div>
+                        <div className="text-xs text-gray-400 mt-1">
+                          {course.credits} credit{course.credits !== 1 ? 's' : ''} • {course.sections.length} section{course.sections.length !== 1 ? 's' : ''}
+                        </div>
+                        {course.sections.length > 0 && (
+                          <div className="text-xs text-gray-400 mt-1">
+                            {formatSchedule(course.sections[0].times)}
+                          </div>
+                        )}
                       </div>
                       <Plus className="h-4 w-4 text-crimson-600" />
                     </div>
@@ -130,22 +160,47 @@ export const CourseStep: React.FC = () => {
           {courses.map((course) => (
             <div
               key={course.id}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+              className="p-3 bg-gray-50 rounded-lg border border-gray-200"
             >
-              <div>
-                <div className="font-medium text-gray-900">
-                  {course.subject} {course.number}
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="font-medium text-gray-900">
+                    {course.subject} {course.number}
+                  </div>
+                  <div className="text-sm text-gray-600">{course.title}</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {course.credits} credit{course.credits !== 1 ? 's' : ''}
+                  </div>
+                  
+                  {/* Course Sections */}
+                  <div className="mt-2 space-y-2">
+                    {course.sections.map((section) => (
+                      <div key={section.id} className="bg-white p-2 rounded border border-gray-200">
+                        <div className="flex items-center space-x-2 text-xs text-gray-600">
+                          <User className="h-3 w-3" />
+                          <span>{section.instructor}</span>
+                          <MapPin className="h-3 w-3 ml-2" />
+                          <span>{section.room}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 mt-1">
+                          <Clock className="h-3 w-3 text-gray-500" />
+                          <span className="text-xs text-gray-600">
+                            {formatSchedule(section.times)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600">{course.title}</div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleRemoveCourse(course.id)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 ml-2"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleRemoveCourse(course.id)}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-              >
-                <X className="h-4 w-4" />
-              </Button>
             </div>
           ))}
         </div>

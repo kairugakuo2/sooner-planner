@@ -1,7 +1,29 @@
 import { create } from 'zustand';
 
 export type Term = { year: number; semester: 'Spring' | 'Summer' | 'Fall' };
-export type Course = { id: string; subject: string; number: string; title: string };
+
+export type CourseTime = {
+  day: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri';
+  start: string;
+  end: string;
+};
+
+export type CourseSection = {
+  id: string;
+  instructor: string;
+  room: string;
+  times: CourseTime[];
+};
+
+export type Course = {
+  id: string;
+  subject: string;
+  number: string;
+  title: string;
+  credits: number;
+  sections: CourseSection[];
+};
+
 export type BreakConstraint = { day: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri'; start: string; end: string };
 export type Style = 'compact' | 'balanced' | 'spread';
 

@@ -1,1 +1,308 @@
-[]
+[
+  {
+    "id": "CS2413-001",
+    "subject": "CS",
+    "number": "2413",
+    "title": "Data Structures",
+    "credits": 3,
+    "sections": [
+      {
+        "id": "CS2413-001",
+        "instructor": "Dr. Smith",
+        "room": "Devon Energy Hall 120",
+        "times": [
+          {
+            "day": "Mon",
+            "start": "09:00",
+            "end": "09:50"
+          },
+          {
+            "day": "Wed",
+            "start": "09:00",
+            "end": "09:50"
+          },
+          {
+            "day": "Fri",
+            "start": "09:00",
+            "end": "09:50"
+          }
+        ]
+      },
+      {
+        "id": "CS2413-002",
+        "instructor": "Dr. Johnson",
+        "room": "Devon Energy Hall 125",
+        "times": [
+          {
+            "day": "Mon",
+            "start": "14:00",
+            "end": "14:50"
+          },
+          {
+            "day": "Wed",
+            "start": "14:00",
+            "end": "14:50"
+          },
+          {
+            "day": "Fri",
+            "start": "14:00",
+            "end": "14:50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CS2614-001",
+    "subject": "CS",
+    "number": "2614",
+    "title": "Computer Organization",
+    "credits": 3,
+    "sections": [
+      {
+        "id": "CS2614-001",
+        "instructor": "Dr. Williams",
+        "room": "Devon Energy Hall 130",
+        "times": [
+          {
+            "day": "Tue",
+            "start": "10:00",
+            "end": "10:50"
+          },
+          {
+            "day": "Thu",
+            "start": "10:00",
+            "end": "10:50"
+          }
+        ]
+      },
+      {
+        "id": "CS2614-002",
+        "instructor": "Dr. Brown",
+        "room": "Devon Energy Hall 135",
+        "times": [
+          {
+            "day": "Tue",
+            "start": "15:00",
+            "end": "15:50"
+          },
+          {
+            "day": "Thu",
+            "start": "15:00",
+            "end": "15:50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "MATH2123-001",
+    "subject": "MATH",
+    "number": "2123",
+    "title": "Calculus III",
+    "credits": 4,
+    "sections": [
+      {
+        "id": "MATH2123-001",
+        "instructor": "Dr. Davis",
+        "room": "Physical Sciences Center 100",
+        "times": [
+          {
+            "day": "Mon",
+            "start": "11:00",
+            "end": "11:50"
+          },
+          {
+            "day": "Wed",
+            "start": "11:00",
+            "end": "11:50"
+          },
+          {
+            "day": "Fri",
+            "start": "11:00",
+            "end": "11:50"
+          }
+        ]
+      },
+      {
+        "id": "MATH2123-002",
+        "instructor": "Dr. Miller",
+        "room": "Physical Sciences Center 105",
+        "times": [
+          {
+            "day": "Mon",
+            "start": "16:00",
+            "end": "16:50"
+          },
+          {
+            "day": "Wed",
+            "start": "16:00",
+            "end": "16:50"
+          },
+          {
+            "day": "Fri",
+            "start": "16:00",
+            "end": "16:50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ENGL1213-001",
+    "subject": "ENGL",
+    "number": "1213",
+    "title": "Composition II",
+    "credits": 3,
+    "sections": [
+      {
+        "id": "ENGL1213-001",
+        "instructor": "Dr. Wilson",
+        "room": "Dale Hall 200",
+        "times": [
+          {
+            "day": "Tue",
+            "start": "09:00",
+            "end": "09:50"
+          },
+          {
+            "day": "Thu",
+            "start": "09:00",
+            "end": "09:50"
+          }
+        ]
+      },
+      {
+        "id": "ENGL1213-002",
+        "instructor": "Dr. Moore",
+        "room": "Dale Hall 205",
+        "times": [
+          {
+            "day": "Tue",
+            "start": "14:00",
+            "end": "14:50"
+          },
+          {
+            "day": "Thu",
+            "start": "14:00",
+            "end": "14:50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHYS2514-001",
+    "subject": "PHYS",
+    "number": "2514",
+    "title": "Physics for Scientists",
+    "credits": 4,
+    "sections": [
+      {
+        "id": "PHYS2514-001",
+        "instructor": "Dr. Taylor",
+        "room": "Physical Sciences Center 200",
+        "times": [
+          {
+            "day": "Mon",
+            "start": "13:00",
+            "end": "13:50"
+          },
+          {
+            "day": "Wed",
+            "start": "13:00",
+            "end": "13:50"
+          },
+          {
+            "day": "Fri",
+            "start": "13:00",
+            "end": "13:50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CS3613-001",
+    "subject": "CS",
+    "number": "3613",
+    "title": "Algorithms",
+    "credits": 3,
+    "sections": [
+      {
+        "id": "CS3613-001",
+        "instructor": "Dr. Anderson",
+        "room": "Devon Energy Hall 140",
+        "times": [
+          {
+            "day": "Tue",
+            "start": "11:00",
+            "end": "11:50"
+          },
+          {
+            "day": "Thu",
+            "start": "11:00",
+            "end": "11:50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "MATH3113-001",
+    "subject": "MATH",
+    "number": "3113",
+    "title": "Linear Algebra",
+    "credits": 3,
+    "sections": [
+      {
+        "id": "MATH3113-001",
+        "instructor": "Dr. Thomas",
+        "room": "Physical Sciences Center 110",
+        "times": [
+          {
+            "day": "Mon",
+            "start": "15:00",
+            "end": "15:50"
+          },
+          {
+            "day": "Wed",
+            "start": "15:00",
+            "end": "15:50"
+          },
+          {
+            "day": "Fri",
+            "start": "15:00",
+            "end": "15:50"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "HIST1483-001",
+    "subject": "HIST",
+    "number": "1483",
+    "title": "American History",
+    "credits": 3,
+    "sections": [
+      {
+        "id": "HIST1483-001",
+        "instructor": "Dr. Jackson",
+        "room": "Dale Hall 300",
+        "times": [
+          {
+            "day": "Tue",
+            "start": "13:00",
+            "end": "13:50"
+          },
+          {
+            "day": "Thu",
+            "start": "13:00",
+            "end": "13:50"
+          }
+        ]
+      }
+    ]
+  }
+]
