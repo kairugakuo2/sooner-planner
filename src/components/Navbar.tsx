@@ -7,7 +7,7 @@ import { GraduationCap, Github } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white shadow-sm text-sm">
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Brand Title - Sooner Planner */}
@@ -16,10 +16,10 @@ const Navbar = () => {
               <GraduationCap className="h-6 w-6 text-black" />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-crimson-600 group-hover:text-crimson-700 transition-colors cursor-pointer">
+              <span className="text-lg font-bold text-crimson-600 group-hover:text-crimson-700 transition-colors cursor-pointer">
                 Sooner Planner
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-sm text-gray-500">
                 Plan your academic journey
               </span>
             </div>
@@ -36,7 +36,7 @@ const Navbar = () => {
 
             {/* GitHub Button */}
             <Button 
-              variant="outline" 
+              variant="default" 
               size="sm" 
               asChild
               className="border-gray-300 hover:border-crimson-300 hover:bg-crimson-50 transition-all"
@@ -47,8 +47,8 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2"
               >
-                <Github className="h-4 w-4" />
-                <span>GitHub</span>
+                <Github className="h-3 w-3" />
+                <span >View on GitHub</span>
               </a>
             </Button>
           </div>
