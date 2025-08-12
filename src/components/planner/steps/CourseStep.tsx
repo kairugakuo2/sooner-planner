@@ -73,11 +73,7 @@ export const CourseStep: React.FC = () => {
             </SelectContent>
           </Select>
         </div>
-        
-        <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <BookOpen className="h-4 w-4" />
-          <span>We'll generate combinations using all available sections.</span>
-        </div>
+
       </div>
 
       {/* Course Search */}
@@ -87,7 +83,7 @@ export const CourseStep: React.FC = () => {
         </label>
         <Command className="border border-gray-300 rounded-lg">
           <CommandInput
-            placeholder="Search by subject, number, or title (e.g., CS 2413)"
+            placeholder="Search by subject + number (e.g., CS 2413)"
             value={searchValue}
             onValueChange={setSearchValue}
             onFocus={() => setIsOpen(true)}
