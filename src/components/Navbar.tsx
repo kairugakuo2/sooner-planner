@@ -13,7 +13,7 @@ const Navbar = () => {
           {/* Brand Title - Sooner Planner */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-crimson-600 group-hover:bg-crimson-700 transition-colors">
-              <GraduationCap className="h-6 w-6 text-white" />
+              <GraduationCap className="h-6 w-6 text-black" />
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-crimson-600 group-hover:text-crimson-700 transition-colors cursor-pointer">
